@@ -1,59 +1,89 @@
-# ChallengeClient
+# Challenge Techforb 2025 - Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.6.
+This is the **frontend** for the **Challenge Techforb 2025**, built with **Angular 19**.  
+The application allows users to authenticate, manage sensors, view real-time readings, and receive alerts for their industrial plants.  
+It communicates with a **Spring Boot backend** that handles business logic and a **PostgreSQL database (Docker)**.
 
-## Development server
+## Key Features
 
-To start a local development server, run:
+- **Responsive Design**: Optimized UI for desktops and mobile devices.
+- **JWT Authentication**: Secure login and registration with role-based access (`USER`, `ADMIN`).
 
-```bash
-ng serve
-```
+- **Real-Time Readings**: Dashboard with dynamic charts.
+- **Security Alerts**: Notifications for critical alerts (`ALERTA_MEDIA`, `ALERTA_ROJA`).
+- **Role-Based Access**: Controlled access for different user roles.
+- **Angular Material & Bootstrap**: Modern and accessible design.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Technologies Used
 
-## Code scaffolding
+- **Angular 19**: Modern frontend framework.
+- **TypeScript**: Strongly typed language for scalability.
+- **RxJS**: Reactive programming for state management.
+- **Angular Material & Bootstrap**: UI components and responsive design.
+- **ngx-toastr**: Toast notifications.
+- **Chart.js**: Interactive charts for real-time data visualization.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+## Directory Structure
 
 ```bash
-ng build
+public
+├── assets/
+│   └── img/
+│
+src/
+├── app/
+│   ├── auth/             # Authentication (login, register, guards, interceptors)
+│   ├── core/
+│   ├── dashboard/
+│   ├── models/           # Interfaces models
+│   ├── shared/
+│   ├── app.component.ts
+│   ├── app.routes.ts
+│
+├── environments/
+│   ├── environment.ts
+│   ├── environment.prod.ts
+│
+└── styles.scss
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## Installation and Usage
 
-## Running unit tests
+To clone and run the frontend locally, follow these steps:
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+1. Clone the repository:
 
-```bash
-ng test
-```
+   ```bash
+   git clone https://github.com/TobiasMoreno/challenge-techforb-client.git
+   ```
 
-## Running end-to-end tests
+2. Navigate to the frontend directory:
 
-For end-to-end (e2e) testing, run:
+   ```bash
+   cd challenge-techforb-client
+   ```
 
-```bash
-ng e2e
-```
+3. Install dependencies:
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+   ```bash
+   npm install
+   ```
 
-## Additional Resources
+4. Configure the environment
+   Create the src/environments/environment.ts file with the following configuration:
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+   ```typescript
+   export const environment = {
+     production: false,
+     apiUrl: "http://localhost:8080/api",
+     authTokenKey: "auth_token",
+   };
+   ```
+
+5. Run the app:
+
+   ```bash
+   ng serve
+   ```
+
+6. Open your browser and visit: http://localhost:4200/
