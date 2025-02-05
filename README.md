@@ -44,7 +44,7 @@ src/
 │   ├── environment.ts
 │   ├── environment.prod.ts
 │
-└── styles.scss
+└── styles.css
 ```
 
 ## Installation and Usage
@@ -67,6 +67,8 @@ To clone and run the frontend locally, follow these steps:
 
    ```bash
    npm install
+   npm install @angular/material
+   npm install ngx-cookie-service
    ```
 
 4. Configure the environment
@@ -76,7 +78,6 @@ To clone and run the frontend locally, follow these steps:
    export const environment = {
      production: false,
      apiUrl: "http://localhost:8080/api",
-     authTokenKey: "auth_token",
    };
    ```
 
