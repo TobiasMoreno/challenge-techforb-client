@@ -11,10 +11,13 @@ export class AuthGuard implements CanActivate {
 
   canActivate(): boolean {
     const token = this.cookieService.get('access_token');
-    if (token) {
-      return true; 
+
+    if (!token) {
+      console.warn('Acceso denegado. No hay token.');
+      this.router.navigate(['/login']);
+      return false;
     }
-    this.router.navigate(['/login']);
-    return false;
+
+    return true;
   }
 }

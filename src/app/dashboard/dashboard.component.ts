@@ -3,7 +3,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { ResponsePlant } from '../models/plant.model';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { DashboardService } from './dashboard.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,16 +14,15 @@ import { HttpClient } from '@angular/common/http';
 export class DashboardComponent implements OnInit{
   plants: ResponsePlant[] = [];
   selectedPlant: any = null;
-  http = inject(HttpClient);
+  dashboardService = inject(DashboardService);
 
-  selectPlant(plant: any): void {
+  selectPlant(plant: ResponsePlant): void {
     this.selectedPlant = plant;
   }
 
   ngOnInit(): void {
-    debugger;
-    this.http.get<ResponsePlant[]>('http://localhost:8080/api/plants').subscribe((plants) => {
-      this.plants = plants;
+    this.dashboardService.getPlants().subscribe((data) => {
+      this.plants = data;
     });
   }
 }
