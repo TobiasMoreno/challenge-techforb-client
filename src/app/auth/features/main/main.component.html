@@ -1,0 +1,34 @@
+<div class="container-fluid vh-100 d-flex align-items-center">
+  <div class="row w-100 h-100 position-relative">
+    <div class="col-12 col-md-7 position-relative p-0">
+      <img
+        src="/assets/img/background_image.png"
+        alt="Imagen de Login"
+        class="img-fluid h-100 w-100 object-fit-cover"
+      />
+    </div>
+
+    <div
+      class="col-12 col-md-5 position-absolute top-0 end-0 h-100 custom-form"
+    >
+      <mat-card
+        class="login-card h-100 d-flex flex-column justify-content-center custom-border"
+      >
+        <h2 class="text-center mb-4">Portal de Monitoreo</h2>
+        @if (isLoginForm) {
+        <app-login></app-login>
+        } @if (!isLoginForm) {
+        <app-register (registerSuccess)="onRegisterSuccess($event)"></app-register>
+        }
+        <div class="d-flex mt-4 justify-content-center">
+          <p class="text-center">
+            {{ isLoginForm ? "¿No tienes cuenta?" : "¿Ya tienes cuenta?" }}
+            <button (click)="toggleForm()" class="btn btn-link">
+              {{ isLoginForm ? "Registrate" : "Iniciar Sesión" }}
+            </button>
+          </p>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+</div>
