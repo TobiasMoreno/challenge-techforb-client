@@ -16,5 +16,6 @@ export interface RequestAlert {
 
 enum AlertType {
     ALERTA_MEDIA = 'ALERTA_MEDIA',
-    ALERTA_ROJA = 'ALERTA_ROJA'
+    ALERTA_ROJA = 'ALERTA_ROJA',
+    OK = 'OK'
 }

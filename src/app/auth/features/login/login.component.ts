@@ -10,10 +10,11 @@ import { MatError, MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatInputModule } from '@angular/material/input';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { AuthService } from '../../data-access/auth-service.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-login',
@@ -25,9 +26,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     MatProgressSpinnerModule,
     ReactiveFormsModule,
     MatInputModule,
+    MatButtonModule,
   ],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css',
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup = new FormGroup({});
@@ -52,6 +53,14 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(): void {
+    if (this.loginForm.invalid) {
+      this._snackBar.open('Por favor, complete los campos correctamente.', 'Cerrar', {
+        duration: 3000,
+        panelClass: ['error-snackbar'],
+      });
+      return;
+    }
+
     if (this.loginForm.valid) {
       this.isLoading = true;
       this.authService

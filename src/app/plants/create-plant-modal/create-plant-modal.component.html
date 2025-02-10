@@ -1,0 +1,49 @@
+<h2 mat-dialog-title>Agregar Nueva Planta</h2>
+<mat-dialog-content class="p-2">
+  <form [formGroup]="plantForm" class="d-flex flex-column">
+    <!-- Nombre de la planta -->
+    <mat-form-field appearance="outline" class="w-100 my-2">
+      <mat-label>Nombre</mat-label>
+      <input
+        type="text"
+        matInput
+        formControlName="name"
+        placeholder="Nombre de la Planta"
+        required
+      />
+      @if (plantForm.controls['name'].hasError('required')) {
+      <mat-error>El nombre es obligatorio</mat-error>
+      } @if (plantForm.controls['name'].hasError('minlength')) {
+      <mat-error>Debe tener al menos 3 caracteres</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Seleccionar País -->
+    <mat-form-field class="w-100">
+      <mat-label>País</mat-label>
+      <mat-select formControlName="country">
+        @if (isLoadingCountries) {
+        <mat-option disabled>Cargando Paises...</mat-option>
+        }
+        @for (country of countries; track $index) {
+        <mat-option [value]="country.name">{{ country.name }}</mat-option>
+        }
+      </mat-select>
+      @if (plantForm.controls['country'].hasError('required')) {
+      <mat-error>El país es obligatorio</mat-error>
+      }
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancelar</button>
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="onSubmit()"
+    [disabled]="plantForm.invalid"
+  >
+    Guardar
+  </button>
+</mat-dialog-actions>

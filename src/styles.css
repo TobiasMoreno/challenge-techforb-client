@@ -1,10 +1,12 @@
 :root {
   --principal-color: #33a3aa;
   --icon-color: #ffb84b;
+  --background-color: #f4f3f6;
 }
 html,
 body {
   height: 100%;
+  background-color:var(--background-color);
 }
 body {
   margin: 0;
