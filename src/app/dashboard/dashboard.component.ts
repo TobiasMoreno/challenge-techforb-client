@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import {
@@ -9,16 +9,25 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { CreatePlantModalComponent } from '../plants/create-plant-modal/create-plant-modal.component';
 import { PlantService } from '../services/plant.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import Swal from 'sweetalert2';
 import { EditPlantModalComponent } from '../plants/edit-plant-modal/edit-plant-modal.component';
 import { AlertService } from '../services/alert.service';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [MatCardModule, MatIconModule, MatButtonModule, MatMenuModule],
+  imports: [
+    MatCardModule,
+    MatIconModule,
+    MatButtonModule,
+    MatMenuModule,
+    MatTableModule,
+    MatPaginatorModule,
+  ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
@@ -34,6 +43,9 @@ export class DashboardComponent implements OnInit {
   mediumAlertsCount: number = 0;
   showActions: boolean = false;
 
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  dataSource = new MatTableDataSource<ResponseCountPlant>([]);
+
   ngOnInit(): void {
     this.getCountPlants();
     this.setAlertsCount();
@@ -42,6 +54,8 @@ export class DashboardComponent implements OnInit {
   getCountPlants(): void {
     this.plantService.getCountPlants().subscribe((data) => {
       this.plants = data;
+      this.dataSource.data = this.plants;
+      this.dataSource.paginator = this.paginator;
     });
   }
 
@@ -78,10 +92,10 @@ export class DashboardComponent implements OnInit {
       if (result.isConfirmed) {
         this.plantService.deletePlantById(plantId).subscribe(() => {
           this.getCountPlants();
-          this.snackBar.open('Planta eliminada con éxito', 'Cerrar', {
-            duration: 2000,
-          });
+          Swal.fire('Planta eliminada con éxito', '', 'success');
         });
+      } else {
+        Swal.fire('Operación cancelada', '', 'info');
       }
     });
   }
@@ -102,7 +116,7 @@ export class DashboardComponent implements OnInit {
     this.plantService.getPlantById(plantId).subscribe((plant) => {
       const dialogRef = this.dialog.open(EditPlantModalComponent, {
         width: '400px',
-        data: plant, 
+        data: plant,
       });
 
       dialogRef.afterClosed().subscribe((updatedPlant: RequestPlant) => {
@@ -114,11 +128,11 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  updatePlant(plantId: string,updatedPlant: RequestPlant): void {
+  updatePlant(plantId: string, updatedPlant: RequestPlant): void {
     this.plantService.updatePlant(plantId, updatedPlant).subscribe(() => {
       this.getCountPlants();
       this.setAlertsCount();
-    })
+    });
   }
 
   toggleActions(): void {
