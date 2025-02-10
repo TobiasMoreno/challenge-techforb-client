@@ -13,16 +13,21 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogModule,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { RequestPlant, ResponsePlant } from '../../models/plant.model';
-import { CountriesService } from '../../shared/data-access/countries.service';
-import { Country } from '../../models/country.model';
 import { MatError, MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { Observable } from 'rxjs';
-import { PlantService } from '../../services/plants.service';
+import { PlantService } from '../../services/plant.service';
+import { CountriesService } from '../../services/country.service';
+import { Country } from '../../models/country.model';
 
 @Component({
   selector: 'app-edit-plant-modal',
@@ -51,9 +56,7 @@ export class EditPlantModalComponent implements OnInit {
 
   @Output() plantUpdated = new EventEmitter<RequestPlant>();
 
-  constructor(
-    @Inject(MAT_DIALOG_DATA) public plantData: RequestPlant
-  ) {
+  constructor(@Inject(MAT_DIALOG_DATA) public plantData: RequestPlant) {
     this.plantForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       country: ['', [Validators.required]],

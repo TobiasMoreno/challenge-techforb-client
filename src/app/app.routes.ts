@@ -5,19 +5,11 @@ import { AuthRedirectGuard } from './core/guards/authRedirect.guard';
 
 export const routes: Routes = [
   {
-    path: 'login',
+    path: 'auth',
     canActivate: [AuthRedirectGuard],
     loadComponent: () =>
-      import('./auth/features/login/login.component').then(
-        (m) => m.LoginComponent
-      ),
-  },
-  {
-    path: 'register',
-    canActivate: [AuthRedirectGuard],
-    loadComponent: () =>
-      import('./auth/features/register/register.component').then(
-        (m) => m.RegisterComponent
+      import('./auth/features/main/main.component').then(
+        (m) => m.MainComponent
       ),
   },
   {
@@ -34,5 +26,5 @@ export const routes: Routes = [
       },
     ],
   },
-  { path: '**', redirectTo: 'login', pathMatch: 'full' },
+  { path: '**', redirectTo: 'auth', pathMatch: 'full' },
 ];

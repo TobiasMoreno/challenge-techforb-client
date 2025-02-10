@@ -10,11 +10,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { CreatePlantModalComponent } from '../plants/create-plant-modal/create-plant-modal.component';
-import { PlantService } from '../services/plants.service';
-import { AlertService } from '../services/alerts.service';
+import { PlantService } from '../services/plant.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import Swal from 'sweetalert2';
 import { EditPlantModalComponent } from '../plants/edit-plant-modal/edit-plant-modal.component';
+import { AlertService } from '../services/alert.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -95,7 +95,6 @@ export class DashboardComponent implements OnInit {
     dialogRef.afterClosed().subscribe(() => {
       this.getCountPlants();
       this.setAlertsCount();
-      Swal.fire('Planta Creada con éxito', '', 'success');
     });
   }
 
@@ -119,7 +118,7 @@ export class DashboardComponent implements OnInit {
     this.plantService.updatePlant(plantId, updatedPlant).subscribe(() => {
       this.getCountPlants();
       this.setAlertsCount();
-    });
+    })
   }
 
   toggleActions(): void {

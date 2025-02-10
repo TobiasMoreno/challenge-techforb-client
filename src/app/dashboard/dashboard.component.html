@@ -65,7 +65,12 @@
     </div>
   </div>
 
-  <h2 class="mt-4">Plantas</h2>
+  <div class="d-flex my-3">
+    <h2>Plantas</h2>
+    <button mat-raised-button color="primary" class="ms-2" (click)="addPlant()">
+      <mat-icon>add</mat-icon> Agregar Planta
+    </button>
+  </div>
   <table class="table table-striped">
     <thead>
       <tr>
@@ -103,42 +108,29 @@
     </tbody>
   </table>
 
-  <!-- Monitoreo por Plantas -->
-  @if (selectedPlant) {
+<!-- Monitoreo por Plantas -->
+@if (selectedPlant) {
   <div class="mt-4">
     <h2>Monitoreo por plantas</h2>
-    <p>{{ selectedPlant.country }} {{ selectedPlant.name }}</p>
+    <p>{{ selectedPlant.country }}  {{ selectedPlant.name }}</p>
     <div class="row">
+      @for (sensor of selectedPlant.sensors; track sensor.id) {
       <div class="col-md-4">
         <mat-card class="stat-card">
           <mat-card-content>
-            <mat-icon>check_circle</mat-icon>
-            <p>Lecturas OK</p>
-            <h3>{{ selectedPlant.readingsOk }}</h3>
+            <h3>{{ sensor.type }}</h3>
+            <ul>
+              @for (reading of sensor.readings; track reading.id) {
+              <li>{{ reading.timestamp }}: {{ reading.readingValue }}</li>
+              }
+            </ul>
           </mat-card-content>
         </mat-card>
       </div>
-      <div class="col-md-4">
-        <mat-card class="stat-card">
-          <mat-card-content>
-            <mat-icon>warning</mat-icon>
-            <p>Alertas Medias</p>
-            <h3>{{ selectedPlant.alertsMedia }}</h3>
-          </mat-card-content>
-        </mat-card>
-      </div>
-      <div class="col-md-4">
-        <mat-card class="stat-card">
-          <mat-card-content>
-            <mat-icon>error</mat-icon>
-            <p>Alertas Rojas</p>
-            <h3>{{ selectedPlant.alertsRed }}</h3>
-          </mat-card-content>
-        </mat-card>
-      </div>
+      }
     </div>
   </div>
   } @else {
-    <h2>Selecciona una planta para ver su monitoreo</h2>
+  <h3>Seleccione una planta para ver su monitoreo</h3>
   }
 </div>

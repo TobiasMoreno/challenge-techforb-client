@@ -1,77 +1,65 @@
-<div class="login-container">
-  <div class="image-container">
-    <img src="/assets/img/background_image.png" alt="Imagen de Login" />
+<h3>Iniciar Sesion</h3>
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+  <!-- Email -->
+  <mat-form-field appearance="outline" class="w-100 mb-3">
+    <mat-label>Email</mat-label>
+    <input
+      matInput
+      type="email"
+      formControlName="email"
+      placeholder="ejemplo@correo.com"
+      required
+    />
+    <mat-icon matSuffix>email</mat-icon>
+    @if (loginForm.controls['email'].hasError('required')) {
+    <mat-error>El email es obligatorio</mat-error>
+    } @if (loginForm.controls['email'].hasError('email')) {
+    <mat-error>El formato del email es incorrecto</mat-error>
+    }
+
+  </mat-form-field>
+
+  <!-- Contraseña -->
+  <mat-form-field appearance="outline" class="w-100 mb-3">
+    <mat-label>Contraseña</mat-label>
+    <input
+      matInput
+      [type]="hidePassword ? 'password' : 'text'"
+      formControlName="password"
+      placeholder="Tu contraseña"
+      required
+    />
+    <button
+      mat-icon-button
+      matSuffix
+      (click)="hidePassword = !hidePassword"
+      type="button"
+    >
+      <mat-icon>{{ hidePassword ? "visibility_off" : "visibility" }}</mat-icon>
+    </button>
+    @if (loginForm.controls['password'].hasError('required')) {
+    <mat-error>La contraseña es obligatoria</mat-error>
+    } @if (loginForm.controls['password'].hasError('minlength')) {
+    <mat-error>La contraseña debe tener al menos 8 caracteres</mat-error>
+    }
+  </mat-form-field>
+
+  <!-- Botón de login -->
+  <div class="d-flex">
+    <button
+      mat-raised-button
+      class="w-100"
+      type="submit"
+      [disabled]="loginForm.invalid || isLoading"
+    >
+      @if (isLoading) {
+      <mat-progress-spinner
+        diameter="20"
+        mode="indeterminate"
+      ></mat-progress-spinner>
+      } @if (!isLoading) {
+      <span class="ms-2">Ingresar</span>
+      }
+    </button>
   </div>
-  <div class="form-container">
-    <mat-card class="login-card">
-      <h2 class="text-center">Iniciar Sesión</h2>
-
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-        <!-- Email -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Email</mat-label>
-          <input
-            matInput
-            type="email"
-            formControlName="email"
-            placeholder="ejemplo@correo.com"
-          />
-          <mat-icon matSuffix>email</mat-icon>
-          @if (loginForm.controls['email'].invalid &&
-          loginForm.controls['email'].touched) {
-          <mat-error>El email es obligatorio</mat-error>
-          }
-        </mat-form-field>
-
-        <!-- Contraseña -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Contraseña</mat-label>
-          <input
-            matInput
-            [type]="hidePassword ? 'password' : 'text'"
-            formControlName="password"
-            placeholder="Tu contraseña"
-          />
-          <button
-            mat-icon-button
-            matSuffix
-            (click)="hidePassword = !hidePassword"
-            type="button"
-          >
-            <mat-icon>{{
-              hidePassword ? "visibility_off" : "visibility"
-            }}</mat-icon>
-          </button>
-          @if (loginForm.controls['password'].invalid ) {
-          <mat-error>La contraseña es obligatoria</mat-error>
-          } @if (loginForm.controls['password'].errors?.['minlength']) {
-          <mat-error>La contraseña debe tener al menos 8 caracteres</mat-error>
-          }
-        </mat-form-field>
-
-        <!-- Botón de login -->
-        <button
-          mat-raised-button
-          color="primary"
-          class="full-width"
-          type="submit"
-          [disabled]="loginForm.invalid || isLoading"
-        >
-          @if (isLoading) {
-          <mat-progress-spinner
-            diameter="20"
-            mode="indeterminate"
-          ></mat-progress-spinner>
-          }@else {
-          <span>Ingresar</span>
-          }
-        </button>
-
-        <!-- Enlace de recuperación -->
-        <p class="text-center mt-2">
-          <a href="#">¿Olvidaste tu contraseña?</a>
-        </p>
-      </form>
-    </mat-card>
-  </div>
-</div>
+</form>
