@@ -1,11 +1,16 @@
 .stat-card {
-  text-align: center;
-  padding: 10px;
+  height: 130px;
+  margin-bottom: 20px;
   transition: transform 0.2s ease-in-out;
 }
 
 .stat-card:hover {
   transform: scale(1.05);
+}
+
+.stat-icon {
+  font-size: 70px;
+  opacity: 0.7;
 }
 
 .table {

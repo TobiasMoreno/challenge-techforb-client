@@ -1,40 +1,65 @@
-<div class="container mt-4">
-  <h2>Monitoreo Global</h2>
+<div class="mt-4">
+  <h2 class="text-center mb-3">Monitoreo Global</h2>
 
-  <div class="row">
-    <div class="col-md-3">
-      <mat-card class="stat-card">
-        <mat-card-content>
-          <mat-icon>check_circle</mat-icon>
-          <p>Lecturas OK</p>
-          <h3>50</h3>
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-3">
+      <mat-card class="stat-card pt-2">
+        <mat-card-content class="d-flex">
+          <div class="flex-grow-1">
+            <p class="mb-1 fw-bold">Lecturas OK</p>
+            <h3 class="m-0">50</h3>
+          </div>
+
+          <div class="d-flex flex-grow-1 align-items-end">
+            <mat-icon class="stat-icon text-success overflow-visible mb-5"
+              >check_circle</mat-icon
+            >
+          </div>
         </mat-card-content>
       </mat-card>
     </div>
-    <div class="col-md-3">
-      <mat-card class="stat-card">
-        <mat-card-content>
-          <mat-icon>warning</mat-icon>
-          <p>Alertas Medias</p>
-          <h3>10</h3>
+    <div class="col-md-6 col-lg-3">
+      <mat-card class="stat-card pt-2">
+        <mat-card-content class="d-flex">
+          <div class="flex-grow-1">
+            <p class="mb-1 fw-bold">Alertas Medias</p>
+            <h3 class="m-0">{{ mediumAlertsCount }}</h3>
+          </div>
+          <div class="d-flex flex-grow-1 align-items-end">
+            <mat-icon class="stat-icon text-warning overflow-visible mb-5"
+              >warning</mat-icon
+            >
+          </div>
         </mat-card-content>
       </mat-card>
     </div>
-    <div class="col-md-3">
-      <mat-card class="stat-card">
-        <mat-card-content>
-          <mat-icon>error</mat-icon>
-          <p>Alertas Rojas</p>
-          <h3>5</h3>
+    <div class="col-md-6 col-lg-3">
+      <mat-card class="stat-card pt-2">
+        <mat-card-content class="d-flex">
+          <div class="flex-grow-1">
+            <p>Alertas Rojas</p>
+            <h3>{{ redAlertsCount }}</h3>
+          </div>
+          <div class="d-flex flex-grow-1 align-items-end">
+            <mat-icon class="stat-icon text-danger overflow-visible mb-5"
+              >report</mat-icon
+            >
+          </div>
         </mat-card-content>
       </mat-card>
     </div>
-    <div class="col-md-3">
-      <mat-card class="stat-card">
-        <mat-card-content>
-          <mat-icon>sensor_off</mat-icon>
-          <p>Sensores Deshabilitados</p>
-          <h3>3</h3>
+    <div class="col-md-6 col-lg-3">
+      <mat-card class="stat-card pt-2">
+        <mat-card-content class="d-flex">
+          <div class="flex-grow-1">
+            <p>Sensores Deshabilitados</p>
+            <h3>3</h3>
+          </div>
+          <div class="d-flex flex-grow-1 align-items-end">
+            <mat-icon class="stat-icon text-warning overflow-visible mb-5"
+              >close</mat-icon
+            >
+          </div>
         </mat-card-content>
       </mat-card>
     </div>
@@ -44,8 +69,11 @@
   <table class="table table-striped">
     <thead>
       <tr>
-        <th>Nombre</th>
-        <th>Acciones</th>
+        <th>Pais</th>
+        <th>Nombre de la Planta</th>
+        <th>Lecturas OK</th>
+        <th>Alertas Medias</th>
+        <th>Alertas Rojas</th>
       </tr>
     </thead>
     <tbody>
@@ -53,15 +81,22 @@
       <tr>
         <td>{{ plant.name }}</td>
         <td>
-          <button mat-button color="primary" (click)="selectPlant(plant)">
-            Ver Planta
+          <button mat-button color="primary" (click)="selectPlant(plant.id)">
+            {{ selectedPlant.id === plant.id ? "Dejar de Ver" : "Ver Planta" }}
           </button>
-          <button mat-icon-button color="warn">
-            <mat-icon>edit</mat-icon>
+          <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
           </button>
-          <button mat-icon-button color="warn">
-            <mat-icon>delete</mat-icon>
-          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="editPlant(plant.id)">
+              <mat-icon>edit</mat-icon>
+              Editar
+            </button>
+            <button mat-menu-item (click)="deletePlant(plant.id)">
+              <mat-icon>delete</mat-icon>
+              Eliminar
+            </button>
+          </mat-menu>
         </td>
       </tr>
       }
@@ -71,7 +106,8 @@
   <!-- Monitoreo por Plantas -->
   @if (selectedPlant) {
   <div class="mt-4">
-    <h2>Monitoreo por Plantas: {{ selectedPlant.name }}</h2>
+    <h2>Monitoreo por plantas</h2>
+    <p>{{ selectedPlant.country }} {{ selectedPlant.name }}</p>
     <div class="row">
       <div class="col-md-4">
         <mat-card class="stat-card">
