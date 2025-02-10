@@ -13,10 +13,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RequestPlant } from '../../models/plant.model';
-import { PlantService } from '../../services/plants.service';
 import { MatSelectModule } from '@angular/material/select';
-import { CountriesService } from '../../shared/data-access/countries.service';
 import { Country } from '../../models/country.model';
+import { PlantService } from '../../services/plant.service';
+import { CountriesService } from '../../services/country.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-create-plant-modal',
@@ -69,6 +70,7 @@ export class CreatePlantModalComponent implements OnInit {
   createPlant(requestPlant: RequestPlant): void {
     this.plantService.createPlant(requestPlant).subscribe(() => {
       this.dialog.closeAll();
+      Swal.fire('Planta Creada con éxito', '', 'success');
     });
   }
 

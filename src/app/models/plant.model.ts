@@ -1,9 +1,10 @@
-import { ResponseSensor } from "./sensor.model";
+import { ResponseSensor } from './sensor.model';
 
 export interface ResponsePlant {
   id: string;
   country: string;
   name: string;
+  country: string;
   ownerEmail: string;
   sensors: ResponseSensor[];
 }
