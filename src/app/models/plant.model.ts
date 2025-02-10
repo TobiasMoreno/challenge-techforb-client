@@ -4,7 +4,6 @@ export interface ResponsePlant {
   id: string;
   country: string;
   name: string;
-  country: string;
   ownerEmail: string;
   sensors: ResponseSensor[];
 }
