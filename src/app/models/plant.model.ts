@@ -2,6 +2,7 @@ import { ResponseSensor } from './sensor.model';
 
 export interface ResponsePlant {
   id: string;
+  country: string;
   name: string;
   country: string;
   ownerEmail: string;
@@ -13,11 +14,12 @@ export interface RequestPlant {
   country: string;
 }
 
-export interface ResponseCountPlant {
+export interface ResponseCountPlant{
   id: string;
   country: string;
   name: string;
-  readingsOk: string;
-  mediumAlerts: string;
-  redAlerts: string;
+  readingsOk: number;
+  mediumAlerts: number;
+  redAlerts: number;
+  sensors: ResponseSensor[];
 }

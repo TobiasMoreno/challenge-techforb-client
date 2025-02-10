@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { SideNavComponent } from './shared/ui/layout/side-nav/side-nav.component';
 import { AuthGuard } from './core/guards/auth.guard';
-import { AuthRedirectGuard } from './core/guards/authRedirect.guard';
+import { AuthRedirectGuard } from './core/guards/auth-redirect.guard';
 
 export const routes: Routes = [
   {

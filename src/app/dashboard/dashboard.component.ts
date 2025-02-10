@@ -138,4 +138,16 @@ export class DashboardComponent implements OnInit {
   toggleActions(): void {
     this.showActions = !this.showActions;
   }
+
+  addPlant(): void {
+    this.dialog.open(CreatePlantModalComponent, {
+      width: '250px',
+      data: { name: '', country: '' },
+    });
+  }
+
+
+  // TODO agregar metodos para obtener la cantidad de alertas OK, MEDIA Y ROJA de una planta en especifico
+  // TODO agregar metodo para obtener la cantidad de alertas OK, MEDIA Y ROJA de todas las plantas del usuario
+  // TODO agregar metodo para obtener la cantidad de sensores dehabilitados
 }
