@@ -67,6 +67,7 @@ export class LoginComponent implements OnInit {
         .login(this.loginForm.value)
         .subscribe((response: any) => {
           this.cookieService.set('access_token', response.access_token, 1, '/', '', true, 'Strict');
+          this.cookieService.set('refresh_token', response.refresh_token, 2, '/', '', true, 'Strict');
           this._snackBar.open('¡Inicio de sesión exitoso!', 'Cerrar', { duration: 3000, panelClass: ['success-snackbar'] });
           this.router.navigate(['/dashboard']);
         }),
