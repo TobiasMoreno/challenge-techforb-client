@@ -7,5 +7,5 @@ import { environment } from '../../../environments/environment';
 })
 export class BaseHttpService {
   http = inject(HttpClient);
-  API_URL = environment.apiUrl;
+  API_URL = environment.production ? environment.apiUrl : 'http://localhost:8080/api';
 }

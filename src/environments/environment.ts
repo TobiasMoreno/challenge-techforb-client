@@ -1,5 +1,4 @@
 export const environment = {
-  production: false,
-  apiUrl: 'http://localhost:8080/api',
-  authTokenKey: 'auth_token',
+  production: true,
+  apiUrl: 'https://challenge-techforb-server-production.up.railway.app/',
 };
