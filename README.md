@@ -2,7 +2,7 @@
 
 This is the **frontend** for the **Challenge Techforb 2025**, built with **Angular 19**.  
 The application allows users to authenticate, manage sensors, view real-time readings, and receive alerts for their industrial plants.  
-It communicates with a **Spring Boot backend** that handles business logic and a **PostgreSQL database (Docker)**.
+It communicates with a **Spring Boot backend** that handles business logic and a **MySQL database**.
 
 ## Key Features
 
@@ -18,11 +18,8 @@ It communicates with a **Spring Boot backend** that handles business logic and a
 
 - **Angular 19**: Modern frontend framework.
 - **TypeScript**: Strongly typed language for scalability.
-- **RxJS**: Reactive programming for state management.
 - **Angular Material & Bootstrap**: UI components and responsive design.
-- **ngx-toastr**: Toast notifications.
-- **Chart.js**: Interactive charts for real-time data visualization.
-
+- **Swalert2**: Sweet alerts for user feedback.
 ## Directory Structure
 
 ```bash
@@ -69,6 +66,7 @@ To clone and run the frontend locally, follow these steps:
    npm install
    npm install @angular/material
    npm install ngx-cookie-service
+   npm install Swalert2
    ```
 
 4. Configure the environment
