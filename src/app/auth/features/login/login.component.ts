@@ -10,11 +10,11 @@ import { MatError, MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatInputModule } from '@angular/material/input';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { AuthService } from '../../data-access/auth-service.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -38,7 +38,6 @@ export class LoginComponent implements OnInit {
   authService = inject(AuthService);
   router = inject(Router);
   cookieService = inject(CookieService);
-  _snackBar = inject(MatSnackBar);
   fb = inject(FormBuilder);
 
   ngOnInit(): void {
@@ -52,30 +51,45 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  onSubmit(): void {
-    if (this.loginForm.invalid) {
-      this._snackBar.open('Por favor, complete los campos correctamente.', 'Cerrar', {
-        duration: 3000,
-        panelClass: ['error-snackbar'],
-      });
-      return;
-    }
 
-    if (this.loginForm.valid) {
-      this.isLoading = true;
-      this.authService
-        .login(this.loginForm.value)
-        .subscribe((response: any) => {
-          this.cookieService.set('access_token', response.access_token, 1, '/', '', true, 'Strict');
-          this.cookieService.set('refresh_token', response.refresh_token, 2, '/', '', true, 'Strict');
-          this._snackBar.open('¡Inicio de sesión exitoso!', 'Cerrar', { duration: 3000, panelClass: ['success-snackbar'] });
-          this.router.navigate(['/dashboard']);
-        }),
-        (error: any) => {
-          console.log(error);
-          this._snackBar.open('Error al iniciar sesión', 'Cerrar', { duration: 3000, panelClass: ['error-snackbar'] }); 
-        };
+onSubmit(): void {
+  if (this.loginForm.valid) {
+    this.isLoading = true;
+    this.authService.login(this.loginForm.value).subscribe({
+      next: (response: any) => {
+        this.cookieService.set('access_token', response.access_token, 1, '/', '', true, 'Strict');
+        this.cookieService.set('refresh_token', response.refresh_token, 2, '/', '', true, 'Strict');
+        Swal.fire({
+          icon: 'success',
+          title: 'Bienvenido de nuevo',
+          text: 'Has iniciado sesión correctamente',
+          confirmButtonColor: '#3085d6'
+        })
+
+        this.router.navigate(['/dashboard']);
         this.isLoading = false;
-    }
+      },
+      error: (error: any) => {
+        console.error(error);
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Error de autenticación',
+          text: 'Correo o contraseña incorrectos. Inténtalo de nuevo.',
+          confirmButtonColor: '#d33'
+        });
+
+        this.isLoading = false;
+      }
+    });
+  } else {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Formulario inválido',
+      text: 'Por favor, complete todos los campos correctamente antes de continuar.',
+      confirmButtonColor: '#f39c12'
+    });
   }
+}
+
 }

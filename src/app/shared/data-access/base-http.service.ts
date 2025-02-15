@@ -7,5 +7,5 @@ import { environment } from '../../../environments/environment';
 })
 export class BaseHttpService {
   http = inject(HttpClient);
-  API_URL = environment.production ? environment.apiUrl : 'http://localhost:8080/api';
+  API_URL = 'https://challenge-techforb-server-production-50d9.up.railway.app/api';
 }

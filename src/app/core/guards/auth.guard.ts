@@ -14,7 +14,7 @@ export class AuthGuard implements CanActivate {
 
     if (!token) {
       console.warn('Acceso denegado. No hay token.');
-      this.router.navigate(['/login']);
+      this.router.navigate(['/auth']);
       return false;
     }
 

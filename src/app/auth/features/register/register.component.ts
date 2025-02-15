@@ -2,7 +2,6 @@ import {
   Component,
   EventEmitter,
   inject,
-  Input,
   OnInit,
   Output,
 } from '@angular/core';
@@ -18,14 +17,15 @@ import { MatError, MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthService } from '../../data-access/auth-service.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-register',
   imports: [
     MatIconModule,
+    MatError,
     MatFormFieldModule,
     MatCardModule,
     MatProgressSpinnerModule,
@@ -45,7 +45,6 @@ export class RegisterComponent implements OnInit {
   authService = inject(AuthService);
   fb = inject(FormBuilder);
   router = inject(Router);
-  snackBar = inject(MatSnackBar);
 
   ngOnInit(): void {
     this.createForm();
@@ -68,22 +67,36 @@ export class RegisterComponent implements OnInit {
           email: this.registerForm.value.email,
           password: this.registerForm.value.password,
         })
-        .subscribe(() => {
-          this.snackBar.open(
-            'Se registró exitosamente el usario! Ahora se debe loguear',
-            'Cerrar',
-            { duration: 3000, panelClass: ['success-snackbar'] }
-          );
-          this.registerSuccess.emit(true);
-        }),
-        (error: any) => {
-          console.log(error);
-          this.snackBar.open('Error al registrar el usuario', 'Cerrar', {
-            duration: 3000,
-            panelClass: ['error-snackbar'],
-          });
-        };
-      this.isLoading = false;
+        .subscribe({
+          next: () => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Bienvenido',
+              text: 'Te has registrado correctamente',
+              confirmButtonColor: '#3085d6',
+            });
+            this.registerSuccess.emit(true);
+            this.isLoading = false;
+          },
+          error: (error: any) => {
+            console.error(error);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error al registrar',
+              text: 'No se pudo completar el registro. Inténtalo nuevamente.',
+              confirmButtonColor: '#d33',
+            });
+
+            this.isLoading = false;
+          },
+        });
+    } else {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Formulario inválido',
+        text: 'Por favor, complete todos los campos correctamente antes de continuar.',
+        confirmButtonColor: '#f39c12',
+      });
     }
   }
   checkPasswords(): boolean {
@@ -91,13 +104,14 @@ export class RegisterComponent implements OnInit {
       this.registerForm.value.password !==
       this.registerForm.value.confirmPassword
     ) {
-      this.snackBar.open('Las contraseñas no coinciden', 'Cerrar', {
-        duration: 3000,
-        panelClass: ['error-snackbar'],
-      });
+      Swal.fire({
+        icon: 'error',
+        title: 'Error de contraseña',
+        text: 'Las contrasenas no coinciden. Inténtalo de nuevo.',
+        confirmButtonColor: '#d33',
+      })
       return false;
     }
     return true;
   }
 }
-

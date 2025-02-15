@@ -7,7 +7,7 @@
         <mat-card-content class="d-flex">
           <div class="flex-grow-1">
             <p class="mb-1 fw-bold">Lecturas OK</p>
-            <h3 class="m-0">50</h3>
+            <h3 class="m-0">{{ readingsOkCount }}</h3>
           </div>
 
           <div class="d-flex flex-grow-1 align-items-end">
@@ -140,7 +140,6 @@
         ]
       "
     ></tr>
-
   </table>
   <mat-paginator
     [pageSize]="5"
@@ -153,24 +152,47 @@
   <h2>Monitoreo por plantas</h2>
   @if (selectedPlant.id) {
   <div class="mt-4">
-    <p>{{ selectedPlant.country }} {{ selectedPlant.name }}</p>
+    <p class="plant-title text-secondary">
+      {{ selectedPlant.country }} - {{ selectedPlant.name }}
+    </p>
+
     <div class="row">
-      @for (sensor of selectedPlant.sensors; track sensor.id) {
-      <div class="col-md-4">
-        <mat-card class="stat-card">
+      @for (sensor of sensorStats; track sensor.id) {
+      <div class="col-md-3 col-sm-6">
+        <mat-card class="stat-card-bottom">
           <mat-card-content>
-            <h3>{{ sensor.type }}</h3>
-            <ul>
-              @for (reading of sensor.readings; track reading.id) {
-              <li>{{ reading.timestamp }}: {{ reading.readingValue }}</li>
-              }
-            </ul>
+            <p class="sensor-title text-secondary">{{ sensor.sensorType }}</p>
+
+            <div class="d-flex justify-content-around align-items-center mt-2">
+              <div class="d-flex">
+                <mat-icon class="text-success">check_circle</mat-icon>
+                <p class="mx-2 pt-1">{{ sensor.readingsOk }}</p>
+              </div>
+              <div class="d-flex">
+                <mat-icon class="text-warning">warning</mat-icon>
+                <p class="mx-2 pt-1">{{ sensor.mediumAlerts }}</p>
+              </div>
+              <div class="d-flex">
+                <mat-icon class="text-danger">report</mat-icon>
+                <p class="mx-2 pt-1">{{ sensor.redAlerts }}</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      }
+      @if (sensorStats.length === 0) {
+      <div class="col-12">
+        <mat-card class="empty-state-card">
+          <mat-card-content>
+            <h3 class="text-center">No hay sensores para esta planta</h3>
           </mat-card-content>
         </mat-card>
       </div>
       }
     </div>
   </div>
+
   } @else {
   <mat-card class="empty-state-card d-flex justify-content-center">
     <mat-card-content>

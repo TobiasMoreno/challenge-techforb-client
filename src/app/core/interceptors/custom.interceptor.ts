@@ -13,21 +13,18 @@ export const customInterceptor: HttpInterceptorFn = (req, next) => {
   const accessToken = cookieService.get('access_token');
   const refreshToken = cookieService.get('refresh_token');
 
-  const excludedUrls = ['/api/auth/login', '/api/auth/register'];
+  const excludedUrls = ['/api/auth'];
 
-  // 🚨 Si la solicitud es de login o register, no hacer nada
   if (excludedUrls.some((url) => req.url.includes(url))) {
     return next(req);
   }
 
-  // 🚨 Si no hay accessToken, no proceder
   if (!accessToken) {
     console.warn('Token no encontrado, redirigiendo al login...');
-    router.navigate(['/login']);
+    router.navigate(['/auth']);
     return next(req);
   }
 
-  // 🚨 Si la solicitud es para el refresh token, usar el refreshToken
   if (req.url.includes('/auth/refresh-token')) {
     return next(
       req.clone({
@@ -38,27 +35,18 @@ export const customInterceptor: HttpInterceptorFn = (req, next) => {
     );
   }
 
-  // 🚨 Clonar la solicitud agregando el access token
   const authReq = req.clone({
     setHeaders: {
       Authorization: `Bearer ${accessToken}`,
     },
   });
 
-  // Proceder con la solicitud interceptada
   return next(authReq).pipe(
     catchError((error) => {
       debugger;
       if (error.status === 401 || error.status === 403) {
         return authService.refreshToken().pipe(
           switchMap((newTokens : any) => {
-            console.log({
-              newTokens,
-              if: {
-                newTokens : !newTokens,
-                newTokensAccessToken: !newTokens.access_token
-              },
-            });
             if (!newTokens || !newTokens.access_token) {
               return throwError(() => new Error('Refresh token inválido'));
             }
@@ -75,9 +63,6 @@ export const customInterceptor: HttpInterceptorFn = (req, next) => {
             return next(retryReq);
           }),
           catchError(() => {
-            console.error(
-              '❌ No se pudo refrescar el token, redirigiendo al login...'
-            );
             router.navigate(['/auth']);
             return throwError(() => new Error('Error al refrescar el token'));
           })

@@ -25,6 +25,7 @@ export class SideNavComponent {
   cookieService = inject(CookieService);
   logout(): void {
     this.cookieService.delete('access_token');
+    this.cookieService.delete('refresh_token');
     this.router.navigate(['/login']);
   }
 }

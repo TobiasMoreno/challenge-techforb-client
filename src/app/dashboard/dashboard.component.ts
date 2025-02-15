@@ -17,6 +17,8 @@ import Swal from 'sweetalert2';
 import { EditPlantModalComponent } from '../plants/edit-plant-modal/edit-plant-modal.component';
 import { AlertService } from '../services/alert.service';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { ResponseSensorStats } from '../models/sensor.model';
+import { SensorService } from '../services/sensor.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -34,6 +36,9 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 export class DashboardComponent implements OnInit {
   plants: ResponseCountPlant[] = [];
   selectedPlant: ResponsePlant = {} as ResponsePlant;
+  sensorStats: ResponseSensorStats[] = [];
+
+  sensorService = inject(SensorService);
   plantService = inject(PlantService);
   alertService = inject(AlertService);
   dialog = inject(MatDialog);
@@ -41,6 +46,7 @@ export class DashboardComponent implements OnInit {
 
   redAlertsCount: number = 0;
   mediumAlertsCount: number = 0;
+  readingsOkCount: number = 0;
   showActions: boolean = false;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -51,22 +57,41 @@ export class DashboardComponent implements OnInit {
     this.setAlertsCount();
   }
 
+
+  loadSensorStats(plantId: string): void {
+    this.sensorService.getSensorStatsByPlantId(plantId).subscribe((data) => {
+      this.sensorStats = data;
+    });
+  }
+  getReadingsOk(): void {
+    this.plants.forEach((plant) => {
+      this.readingsOkCount += plant.readingsOk;
+    });
+  }
+
   getCountPlants(): void {
     this.plantService.getCountPlants().subscribe((data) => {
       this.plants = data;
       this.dataSource.data = this.plants;
       this.dataSource.paginator = this.paginator;
+      this.getReadingsOk();
     });
   }
 
   selectPlant(plantId: string): void {
     if (this.selectedPlant && this.selectedPlant.id === plantId) {
       this.selectedPlant = {} as ResponsePlant;
+      this.sensorStats = [];
     } else {
       this.plantService.getPlantById(plantId).subscribe((data) => {
         this.selectedPlant = data;
+        this.loadSensorStats(plantId);
       });
     }
+  }
+
+  formatPlantData():void{
+
   }
 
   setAlertsCount(): void {
@@ -138,5 +163,4 @@ export class DashboardComponent implements OnInit {
   toggleActions(): void {
     this.showActions = !this.showActions;
   }
-
 }

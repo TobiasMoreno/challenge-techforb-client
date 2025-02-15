@@ -10,6 +10,11 @@
       placeholder="ejemplo@correo.com"
       required
     />
+    @if (registerForm.controls['email'].hasError('required')) {
+    <mat-error>El email es obligatorio</mat-error>
+    } @if (registerForm.controls['email'].hasError('email')) {
+    <mat-error>El formato del email es incorrecto</mat-error>
+    }
   </mat-form-field>
 
   <!-- Contraseña -->
@@ -29,6 +34,11 @@
     >
       <mat-icon>{{ hidePassword ? "visibility_off" : "visibility" }}</mat-icon>
     </button>
+    @if (registerForm.controls['password'].hasError('required')) {
+    <mat-error>La contraseña es obligatoria</mat-error>
+    } @if (registerForm.controls['password'].hasError('minlength')) {
+    <mat-error>La contraseña debe tener al menos 8 caracteres</mat-error>
+    }
   </mat-form-field>
 
   <!-- Confirmar Contraseña -->
@@ -50,6 +60,11 @@
         hideConfirmPassword ? "visibility_off" : "visibility"
       }}</mat-icon>
     </button>
+    @if (registerForm.controls['confirmPassword'].hasError('required')) {
+    <mat-error>La contraseña es obligatoria</mat-error>
+    } @if (registerForm.controls['confirmPassword'].hasError('minlength')) {
+    <mat-error>La contraseña debe tener al menos 8 caracteres</mat-error>
+    }
   </mat-form-field>
 
   <!-- Botón de registro -->
