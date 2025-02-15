@@ -47,6 +47,7 @@ export class DashboardComponent implements OnInit {
   redAlertsCount: number = 0;
   mediumAlertsCount: number = 0;
   readingsOkCount: number = 0;
+  disabledSensors: number = 0;
   showActions: boolean = false;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -69,12 +70,19 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  getDisabledSensors(): void {
+    this.sensorService.getDisabledSensors().subscribe((data) => {
+      this.disabledSensors = data.length;
+    });
+  }
+
   getCountPlants(): void {
     this.plantService.getCountPlants().subscribe((data) => {
       this.plants = data;
       this.dataSource.data = this.plants;
       this.dataSource.paginator = this.paginator;
       this.getReadingsOk();
+      this.getDisabledSensors();
     });
   }
 
