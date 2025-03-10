@@ -18,7 +18,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router } from '@angular/router';
-import { AuthService } from '../../data-access/auth-service.service';
+import { AuthService } from '../../data-access/auth.service';
 import Swal from 'sweetalert2';
 
 @Component({

@@ -1,26 +1,31 @@
-import { HttpInterceptorFn } from '@angular/common/http';
-import { inject } from '@angular/core';
+import { isPlatformServer } from '@angular/common';
+import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
+import { inject, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
-import { AuthService } from '../../auth/data-access/auth-service.service';
 import { catchError, switchMap, throwError } from 'rxjs';
+import { AuthService } from '../../auth/data-access/auth.service';
 
 export const customInterceptor: HttpInterceptorFn = (req, next) => {
   const cookieService = inject(CookieService);
   const authService = inject(AuthService);
   const router = inject(Router);
+  const platformId = inject(PLATFORM_ID);
 
   const accessToken = cookieService.get('access_token');
   const refreshToken = cookieService.get('refresh_token');
 
   const excludedUrls = ['/api/auth'];
 
+  let headers = req.headers.set('Content-Type', 'application/json');
+
+  if (isPlatformServer(platformId)) return next(req);
+
   if (excludedUrls.some((url) => req.url.includes(url))) {
     return next(req);
   }
 
   if (!accessToken) {
-    console.warn('Token no encontrado, redirigiendo al login...');
     router.navigate(['/auth']);
     return next(req);
   }
@@ -35,41 +40,35 @@ export const customInterceptor: HttpInterceptorFn = (req, next) => {
     );
   }
 
-  const authReq = req.clone({
-    setHeaders: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-
+  const authReq = req.clone({ headers });
+  //Usuario pide algo con el token
+  //Server responde 403 por token expirado
+  //Interceptor captura el 403
+  //Interceptor pide un nuevo token
+  //Server responde con un nuevo token
+  //Interceptor guarda el nuevo token
+  //Interceptor reenvia la peticion original con el nuevo token
+  //Si es otro error devuelve el error
   return next(authReq).pipe(
-    catchError((error) => {
-      debugger;
+    catchError((error: HttpErrorResponse) => {
       if (error.status === 401 || error.status === 403) {
         return authService.refreshToken().pipe(
-          switchMap((newTokens : any) => {
-            if (!newTokens || !newTokens.access_token) {
-              return throwError(() => new Error('Refresh token inválido'));
-            }
+          switchMap((response) => {
+            cookieService.set('access_token', response.access_token);
+            cookieService.set('refresh_token', response.refresh_token);
 
-            cookieService.set('access_token', newTokens.access_token);
-            cookieService.set('refresh_token', newTokens.refresh_token);
+            const updateHeaders = req.headers.set(
+              'Authorization',
+              `Bearer ${response.access_token}`
+            );
+            const newReq = req.clone({ headers: updateHeaders });
 
-            const retryReq = req.clone({
-              setHeaders: {
-                Authorization: `Bearer ${newTokens.access_token}`,
-              },
-            });
-
-            return next(retryReq);
-          }),
-          catchError(() => {
-            router.navigate(['/auth']);
-            return throwError(() => new Error('Error al refrescar el token'));
+            return next(newReq);
           })
         );
+      } else {
+        return throwError(() => error);
       }
-
-      return throwError(() => error);
     })
   );
 };

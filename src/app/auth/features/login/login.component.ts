@@ -12,7 +12,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
-import { AuthService } from '../../data-access/auth-service.service';
+import { AuthService } from '../../data-access/auth.service';
 import { MatButtonModule } from '@angular/material/button';
 import Swal from 'sweetalert2';
 
